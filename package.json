@@ -1,0 +1,8 @@
+{
+  "name": "repdep",
+  "version": "1.0.0",
+  "description": "replace dependencies in package",
+  "main": "index.js",
+  "author": "Koichiro Okamoto",
+  "license": "MIT"
+}
