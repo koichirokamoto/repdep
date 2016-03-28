@@ -4,5 +4,9 @@
   "description": "replace dependencies in package",
   "main": "index.js",
   "author": "Koichiro Okamoto",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koichiroo/repdep.git"
+  }
 }
