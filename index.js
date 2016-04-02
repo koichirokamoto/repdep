@@ -5,7 +5,29 @@ const fs = require('fs');
 const path = require('path');
 const child_process = require('child_process');
 
-/* get path to package.json */
+// USAGE message
+const USAGE = 'USAGE:\n\tnode repdep <sourceDir> <options>\n\noptions\:\n\t-h, --help: display usage(this)\n\t-e, --exclude <packageName [packageName \.\.\.\]>: exclude packages for replacing'
+
+// help option
+if ((process.argv.indexOf('-h') !== -1) || (process.argv.indexOf('--help')) !== -1) {
+  console.log(USAGE);
+  return;
+}
+
+// exclude option
+let excludePackages;
+if ((process.argv.indexOf('-e')) !== -1 || (process.argv.indexOf('--exclude')) !== -1) {
+  const index = process.argv.indexOf('-e') || process.argv.indexOf('--exclude');
+  excludePackages = process.argv.slice(index);
+  if (excludePackages.length === 1) {
+    excludePackages = [];
+  } else {
+    excludePackages = excludePackages.slice(1);
+  }
+  process.argv = process.argv.slice(0, index);
+}
+
+// get path to package.json
 const sourceDir = process.argv.length === 3 ? process.argv[2] : __dirname;
 const packageDir = path.join(path.resolve(sourceDir));
 const packageJson = path.join(packageDir, 'package.json');
@@ -26,7 +48,12 @@ const createInstallCommand = (prop, json) => {
     command += ' --save-dev';
   }
 
-  return command.split(' ').concat(Object.keys(json));
+  return command.split(' ').concat(Object.keys(json).map(p => {
+    if (excludePackages.indexOf(p) !== -1) {
+      return p + '@' + json[p];
+    }
+    return p;
+  }));
 }
 
 /**
@@ -52,9 +79,7 @@ const batchedSpawn = (cmdArray) => {
   }
 };
 
-/**
- * main process
- */
+// main process
 const main = () => {
   fs.readFile(packageJson, (err, data) => {
     if (err) throw err;
