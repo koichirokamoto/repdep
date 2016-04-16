@@ -15,7 +15,7 @@ if ((process.argv.indexOf('-h') !== -1) || (process.argv.indexOf('--help')) !== 
 }
 
 // exclude option
-let excludePackages;
+let excludePackages = [];
 if ((process.argv.indexOf('-e')) !== -1 || (process.argv.indexOf('--exclude')) !== -1) {
   const index = process.argv.indexOf('-e') || process.argv.indexOf('--exclude');
   excludePackages = process.argv.slice(index);
